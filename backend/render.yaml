@@ -1,12 +1,15 @@
 services:
   - type: web
-    name: ml-student-predictor
+    name: ml-student-predictor-api
     runtime: python
     plan: free
-    buildCommand: pip install -r requirements.txt
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt && python generate_dataset.py && python train_model.py
     startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --timeout 120
     envVars:
       - key: FLASK_ENV
         value: production
       - key: PYTHON_VERSION
         value: 3.11.0
+      - key: ALLOWED_ORIGINS
+        value: https://ml-student-predictor.vercel.app,http://localhost:5173
